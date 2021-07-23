@@ -77,6 +77,10 @@ EOT
 
     pack_dmg)
 
+        cd $project
+        ln -s /Applications Applications
+        cd ..
+
         hdiutil create -fs 'HFS+' -format UDBZ -ov -volname "$project" -srcfolder "$project" "$project.dmg"
 
         echo "Next, run $0 $project sign_dmg"
