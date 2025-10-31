@@ -59,16 +59,13 @@ EOT
 
         zip -r "$project-app.zip" "$app"
 
-        xcrun altool $ALTOOL_EXTRA -u "$APPLEID" -p "$PASSWORD"  \
-            --notarize-app --primary-bundle-id "$BUNDLE" -f "$project-app.zip"
+        xcrun notarytool submit --apple-id "$APPLEID" --password "$PASSWORD" --team-id "$TEAM_ID" --wait "$project-app.zip"
 
-        echo "Wait for notarization to finish, then run $0 $project staple_app"
+        echo "Next, run $0 $project staple_app"
 
         ;;
 
-    staple_app)
-
-        xcrun stapler staple "$app"
+    staple_app)       xcrun stapler staple "$app"
 
         echo "Next, run $0 $project pack_dmg"
 
@@ -84,6 +81,7 @@ EOT
         ;;
 
     sign_dmg)
+
         codesign --timestamp --verbose -s "$IDENTITY" -f  "$project.dmg"
 
         echo "Next, run $0 $project notarize_dmg"
@@ -92,10 +90,9 @@ EOT
 
     notarize_dmg)
 
-        xcrun altool $ALTOOL_EXTRA -u "$APPLEID" -p "$PASSWORD"  \
-            --notarize-app --primary-bundle-id "$BUNDLE.dmg" -f "$project.dmg"
+        xcrun notarytool submit --apple-id "$APPLEID" --password "$PASSWORD" --team-id "$TEAM_ID" --wait "$project.dmg"
 
-        echo "Wait for notarization to finish, then run $0 $project staple_dmg"
+        echo "Done. Now run $0 $project staple_dmg"
 
         ;;
 
@@ -109,34 +106,20 @@ EOT
 
     status)
 
-        xcrun altool $ALTOOL_EXTRA -u "$APPLEID" -p "$PASSWORD"  \
-            --notarization-history 0
+        echo "Status is no longer required."
 
         ;;
 
-    step1)
+    auto|step1)
+
 
         "$0" "$project" unpack_app
         "$0" "$project" sign_app
         "$0" "$project" notarize_app
-
-        echo "or run $0 $project step2"
-
-        ;;
-
-    step2)
-
         "$0" "$project" staple_app
         "$0" "$project" pack_dmg
         "$0" "$project" sign_dmg
         "$0" "$project" notarize_dmg
-
-        echo "or run $0 $project step3"
-
-        ;;
-
-    step3)
-
         "$0" "$project" staple_dmg
 
         ;;
@@ -153,21 +136,15 @@ usage: $0 <project> <command>
 
 Possible commands are:
 
-    step1
+    auto
         unpack_app
         sign_app
         notarize_app
-
-    step2
         staple_app
         pack_dmg
         sign_dmg
         notarize_dmg
-
-    step3
         staple_dmg
-
-    status
 
 EOT
         ;;

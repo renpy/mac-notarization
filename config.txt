@@ -1,4 +1,4 @@
-# The Email address associated with your Apple ID.
+# The email address associated with your Apple ID.
 APPLEID="guy@domain.com"
 
 # A one-time use password associated with your Apple ID.
@@ -11,14 +11,5 @@ PASSWORD="b0at-tr33-ba77-f33t"
 # The identity associated with your Developer ID certificate.
 IDENTITY="Developer ID Application: Guy Smiley (XHTE5H1234)"
 
-# A name for the bundle that's being created. This isn't used for much,
-# just to keep track of things.
-BUNDLE="org.renpy.test"
-
-# These are additional options that are passed to the notarization tool.
-#
-# I've had to give this ALTOOL_EXTRA="--asc-provider XHTE5H1234" to
-# specify which of multiple organizations the application should
-# be submitted to. It also makes sense to give ALTOOL_EXTRA="--verbose"
-# to produce copious amounts of output to debug notarization problems.
-ALTOOL_EXTRA=""
+# The team ID associated with your Apple Developer account.
+TEAM_ID="XHTE5H1234"
